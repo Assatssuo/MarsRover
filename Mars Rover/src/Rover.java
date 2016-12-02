@@ -2,7 +2,7 @@ import java.awt.Point;
 public class Rover {
 	private char direction;
 
-	public Rover(char d, Plateau p) {
+	public Rover(char d) {
 		direction = d;
 	}
 
@@ -49,12 +49,12 @@ public class Rover {
 		direction = d;
 	}
 	
-	public void command(String c){
+	public void command(String c, Plateau plateau){
 		char[] commands = c.toCharArray();
 		
-		for(int i = 0; i <= commands.length; i++){
+		for(int i = 0; i < commands.length; i++){
 			if(commands[i]=='M'){
-				move()
+				move(this, plateau.getWid(), plateau.getLen(), plateau );
 			}else{
 				turn(commands[i]);
 			}
@@ -62,31 +62,39 @@ public class Rover {
 		}
 	}
 	
-	public void move(Rover r, char d, int wid, int len){
-		for(int i = 0; i <= wid; i++){
-			for(int j = 0; j <= len; j++){
+	public void move(Rover r, int wid, int len, Plateau plateau){
+		Rover[][] grid = plateau.getGrid();
+		for(int i = 0; i < wid; i++){
+			for(int j = 0; j < len; j++){
 				if(grid[i][j] == r){
 					switch (r.getDirection()) {
 					case 'N':
-						grid[i][j + 1] = r;
-						grid[i][j] = null;
+						if(!(j == grid[0].length-1)){
+							grid[i][j + 1] = r;
+							grid[i][j] = null;
+						}						
 						break;
 					case 'W':
-						grid[i - 1][j] = r;
-						grid[i][j] = null;
+						if(!(i == 0)){
+							grid[i - 1][j] = r;
+							grid[i][j] = null;
+						}
 						break;
 					case 'S':
-						grid[i][j - 1] = r;
-						grid[i][j] = null;
+						if(!(j == 0)){
+							grid[i][j - 1] = r;
+							grid[i][j] = null;
+						}						
 						break;
 					case 'E':
-						grid[i + 1][j] = r;
-						grid[i][j] = null;
+						if(!(i == grid.length-1)){
+							grid[i + 1][j] = r;
+							grid[i][j] = null;
+						}						
 						break;
 					}
 				}
 			}
 		}
 	}
-
 }
